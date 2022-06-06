@@ -1,19 +1,16 @@
 body {
-    background-color: black;
-    color: #F5DEB3;
+    background-color: black !important;
+    color: #F5DEB3 !important;
     height: 100%;
 }
 html{
     height: 100%;
 }
 .parallax {
-  height: 100%;
+  position: relative;
+  opacity: 0.65;
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-}
-.container {
-    background-color: #F5DEB3 ;
-    width: 100%;
 }
