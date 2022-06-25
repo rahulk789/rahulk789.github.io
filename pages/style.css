@@ -8,6 +8,10 @@ body,html{
 i{
     color: red;
 }
+.home{
+    background-image: url("public/home.jpg"); !important ;
+    height: 100%;
+}
 .containerss{ 
     background: #0E0C0A ;
     box-shadow:0 5px 15px rgba(0,0,0,.5);
