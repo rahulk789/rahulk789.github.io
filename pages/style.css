@@ -15,10 +15,10 @@ i{
 .containerss{ 
     background: #0E0C0A ;
     box-shadow:0 5px 15px rgba(0,0,0,.5);
-	padding: 22px;
+	padding: 2%;
     align: center !important;
 	text-align: center;
-    margin: 50px 300px ;
+    margin: 5% 12% ;
 }
 .imagescss {
     background-image: url("public/images1.gif");
