@@ -1,32 +1,38 @@
 body,html{
     height: 100%;
-    background: black !important;
-    color: #F5DEB3 !important;
+    background: #0E0C0A !important;
+    color: white !important;
     font-size: 18px !important ;
     font-family: "Times new roman", serif !important ;
 }
+i{
+    color: red;
+}
 .containerss{ 
-    background: black;
-	box-shadow:0 5px 15px rgba(0,0,0,.5);
+    background: #0E0C0A ;
+    box-shadow:0 5px 15px rgba(0,0,0,.5);
 	padding: 22px;
-    align: center;
-	overflow-y: auto;
-	margin-bottom: 50px;
-    margin-top: 50px;
+    align: center !important;
+	text-align: center;
+    margin: 50px 300px ;
 }
 .imagescss {
-    background-image: url("public/images.jpg");
+    background-image: url("public/images1.gif");
     min-height: 50%
 }
 .images1css{
-    background-image: url("public/images1.jpg"); 
+    background-image: url("public/images1.gif"); 
     min-height: 50%
 }
-.imagescss , .images1css {
+.images2css{
+    background-image: url("public/images1.gif");
+    min-height: 50%
+}
+.imagescss , .images1css, .images2.css {
     position: relative;
     opacity: 0.65;
     background-attachment: fixed;
     background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-repeat: repeat;
+    background-size: fixed;
 }
