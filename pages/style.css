@@ -2,13 +2,14 @@ body,html{
     height: 100%;
     background: black !important;
     color: #F5DEB3 !important;
-    font-size: 22px !important ;
-    font-family: Roboto , "Times New Roman" , serif !important ;
+    font-size: 18px !important ;
+    font-family: "Times new roman", serif !important ;
 }
 .containerss{ 
     background: black;
 	box-shadow:0 5px 15px rgba(0,0,0,.5);
 	padding: 22px;
+    align: center;
 	overflow-y: auto;
 	margin-bottom: 50px;
     margin-top: 50px;
