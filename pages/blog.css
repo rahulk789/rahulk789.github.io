@@ -57,7 +57,7 @@ body {
 }
 .projcard-img {
 	position: absolute;
-	height: 300px;
+	height: ;
 	width: 400px;
 	top: 0;
 	left: 0;
@@ -185,4 +185,7 @@ body {
 	border-top: 13px solid transparent;
 	right: -10px;
 	top: 0;
+}
+[class*="col-"] {
+  width: 100%;
 }
