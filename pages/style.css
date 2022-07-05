@@ -1,16 +1,19 @@
 body,html{
     height: 100%;
     background: #0E0C0A !important;
-    color: white !important;
+    color: #CDCCCC !important;
     font-size: 18px !important ;
     font-family: "Times new roman", serif !important ;
 }
 i{
-    color: red;
+    color: #8B0020;
 }
 .home{
     background-image: url("public/home.jpg"); !important ;
-    height: 100%;
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: cover;
+    background-size: fixed;
 }
 .containerss{ 
     background: #0E0C0A ;
