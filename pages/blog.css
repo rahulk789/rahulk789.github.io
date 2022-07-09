@@ -3,6 +3,29 @@ body {
 	color: white;
 	font-size: 14px;
 }
+a:link {
+  color: #CDCCCC !important;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #CDCCCC;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: white !important;
+  background-color: transparent;
+  text-decoration: none !important;
+}
+
+a:active {
+  color: #CDCCCC;
+  background-color: transparent;
+  text-decoration: none;
+}
 .projcard-container {
 	margin: 50px 0;
 }
