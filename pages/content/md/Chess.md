@@ -1,4 +1,4 @@
-#Chess!!
+# Chess!!
 Hey readers, As you might have heard from literally anyone you've met, "Chess is
 a game for the intelligent" or "Chess is so fun and interesting!!" or "There are more number
 of possible chess positions than there are atoms in this universe!!" and what not. Before
