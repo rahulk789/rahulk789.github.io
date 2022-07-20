@@ -1,3 +1,4 @@
+## Is Anger necessarily bad?
 Hey readers! In this blog i shall be giving my own perspectives on anger and other similar emotions.
 Anger causes one's blood to rush from their brain to the body muscles. It is an emotion
 (like any other) which is triggered by the amygdala which is responsible for identifying

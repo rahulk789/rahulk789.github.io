@@ -1,4 +1,4 @@
-# Chess!!
+# Why you shouldn't play chess?
 Hey readers, As you might have heard from literally anyone you've met, "Chess is
 a game for the intelligent" or "Chess is so fun and interesting!!" or "There are more number
 of possible chess positions than there are atoms in this universe!!" and what not. Before
@@ -12,6 +12,7 @@ you lose and trust me, its so easy to lose.
  No matter how good you get, you will never feel good enough. 
  Sometimes the game just feels unfair when you lose on time. after getting a winning 
  position after grinding, one goddamn mistake is gonna cost you the game.
+ \
  Chess is more about not making mistakes and less about making good moves and
  how demoralising is that!!! no matter how good and creative moves i make, 40 in a row
  50? 100? it doesnt matter, if i make a single mistake the game is done.
@@ -34,7 +35,7 @@ you lose and trust me, its so easy to lose.
  XD. Although not everyone would share the same opinion as me, but at least Paul Morphy
  does. With that I shall end this blog with his lovely quote. Thanks for reading.i
 
->The ability to play chess is the sign of a gentleman. The ability to play chess well is the sign of a wasted life
+>The ability to play chess is the sign of a gentleman. The ability to play chess well is the sign of a wasted life \
 >-Paul Morphy
 
 
