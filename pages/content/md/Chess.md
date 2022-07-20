@@ -1,3 +1,4 @@
+\
 # Why you shouldn't play chess?
 Hey readers, As you might have heard from literally anyone you've met, "Chess is
 a game for the intelligent" or "Chess is so fun and interesting!!" or "There are more number
@@ -33,8 +34,8 @@ you lose and trust me, its so easy to lose.
  unfortunately thats like saying, alcohol in moderation is fine. Chess is additive.
  With all that said, if i tell you to play chess, consider that I hate you to the core
  XD. Although not everyone would share the same opinion as me, but at least Paul Morphy
- does. With that I shall end this blog with his lovely quote. Thanks for reading.i
-
+ does. With that I shall end this blog with his lovely quote. Thanks for reading.
+\
 >The ability to play chess is the sign of a gentleman. The ability to play chess well is the sign of a wasted life \
 >-Paul Morphy
 
