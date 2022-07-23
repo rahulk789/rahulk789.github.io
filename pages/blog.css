@@ -27,7 +27,7 @@ a:active {
   text-decoration: none;
 }
 .projcard-container {
-	margin: 50px 0;
+	margin: 5% 0;
 }
 
 /* Actual Code: */
@@ -38,7 +38,7 @@ a:active {
 .projcard-container {
 	margin-left: auto;
 	margin-right: auto;
-	width: 95%;
+	width: 80%;
 }
 .projcard {
 	position: relative;
@@ -68,7 +68,7 @@ a:active {
 	background-image: linear-gradient(-70deg, black , transparent 50%);
 	opacity: 0.07;
 }
-.projcard:nth-child(2n)::before {
+.projcard::before {
 	background-image: linear-gradient(-250deg, black, transparent 50%);
 }
 .projcard-innerbox {
@@ -80,13 +80,13 @@ a:active {
 }
 .projcard-img {
 	position: absolute;
-	height: ;
-	width: 400px;
+	height:100% ;
+	max-width:100% ;
 	top: 0;
 	left: 0;
 	transition: transform 0.2s ease;
 }
-.projcard:nth-child(2n) .projcard-img {
+.projcard, .projcard-img {
 	left: initial;
 	right: 0;
 }
@@ -100,47 +100,27 @@ a:active {
 	position: absolute;
 	top: 7%;
 	bottom: 7%;
-	left: 430px;
-	width: calc(100% - 470px);
+	left: 5%;
 	font-size: 17px;
-}
-.projcard:nth-child(2n) .projcard-textbox {
-	left: initial;
-	right: 430px;
-}
-.projcard-textbox::before,
-.projcard-textbox::after {
-	content: "";
-	position: absolute;
-	display: block;
-	background: #0E0C0A ;
-	top: -20%;
-	left: -55px;
-	height: 140%;
-	width: 60px;
-	transform: rotate(8deg);
-}
-.projcard:nth-child(2n) .projcard-textbox::before {
-	display: none;
-}
-.projcard-textbox::after {
-	display: none;
-	left: initial;
-	right: -55px;
-}
-.projcard:nth-child(2n) .projcard-textbox::after {
-	display: block;
+	width: calc(100% - 10%);
 }
 .projcard-textbox * {
 	position: relative;
 }
 .projcard-title {
-	font-family: Voces, Open Sans, arial, sans-serif;
+	display: inline-block;
+	color: #CDCCCC ;
+	background: rgba(14,12,10,0.5) ;
+    border-radius: 20px; 
+    font-family: Voces, Open Sans, arial, sans-serif;
 	font-size: 24px;
 }
 .projcard-subtitle {
-	font-family: Voces, Open Sans, arial, sans-serif;
-	color: #888;
+	display: inline-block;
+	color: #CDCCCC ;
+	background: rgba(14,12,10,0.5) ;
+    border-radius: 20px; 
+    font-family: Voces, Open Sans, arial, sans-serif;
 }
 .projcard-bar {
 	left: -2px;
@@ -153,10 +133,10 @@ a:active {
 }
 .projcard-red .projcard-bar { background-color: #D62F1F; }
 .projcard-red::before { background-image: linear-gradient(-70deg, #808080, transparent 50%); }
-.projcard-red:nth-child(2n)::before { background-image: linear-gradient(-250deg, #808080, transparent 50%); }
+.projcard-red::before { background-image: linear-gradient(-250deg, #808080, transparent 50%); }
 .projcard-grey .projcard-bar { background-color: #424242; }
 .projcard-grey::before { background-image: linear-gradient(-70deg, #424242, transparent 50%); }
-.projcard-grey:nth-child(2n)::before { background-image: linear-gradient(-250deg, #424242, transparent 50%); }
+.projcard-grey::before { background-image: linear-gradient(-250deg, #424242, transparent 50%); }
 .projcard-customcolor .projcard-bar { background-color: var(--projcard-color); }
 .projcard-customcolor::before { background-image: linear-gradient(-70deg, var(--projcard-color), transparent 50%); }
 .projcard-customcolor:nth-child(2n)::before { background-image: linear-gradient(-250deg, var(--projcard-color), transparent 50%); }
@@ -166,7 +146,9 @@ a:active {
 	color: #888;
 	height: 125px;
 	overflow: hidden;
-	text-overflow: ellipsis;
+	
+    text-overflow: ellipsis;
+    width: calc(100% - 10%);
 }
 .projcard-tagbox {
 	position: absolute;
@@ -208,7 +190,4 @@ a:active {
 	border-top: 13px solid transparent;
 	right: -10px;
 	top: 0;
-}
-[class*="col-"] {
-  width: 100%;
 }
