@@ -4,7 +4,7 @@ Anger causes one's blood to rush from their brain to the body muscles. It is an 
 (like any other) which is triggered by the amygdala which is responsible for identifying
 threats to our wellbeing. Although one can control these emotions with the help of our
 eternally logical part of the brain: prefrontol cortex. Now that we have that out, lets
-discuss the philosophy of it.  
+discuss the philosophy of it.    
 \ 
 Anger seems to be having a very bad reputation among the
 commoners. They seem to despise it and choose to repress it which is not the way to 
@@ -13,7 +13,7 @@ as a tool to manipulate your aquintances into doing work for you. It can be used
 make bargains in a tight business setting. Anger triggers the release of a neurotransmitters 
 known as catecholamines which lead to a burst of energy. One can use this energy to 
 channel oneself to do something productive such as writing or setting up goals. Anger
-leads to introspection which inturn can lead to self-improvement.   
+leads to introspection which inturn can lead to self-improvement.     
 \ 
 This emotion is 
 often experienced by the optimistic and hopeful individuals who wish to achieve great
