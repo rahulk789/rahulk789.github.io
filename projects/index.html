@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projects · Rahul K</title>
+  <meta name="description" content="Projects by Rahul K: Kettle (a container runtime), a Restate-based browser orchestrator, and a set of eBPF networking tools.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<main class="page">
+  <nav class="top">
+    <span class="prompt"><b>rahul@nixos</b>:~$ ls projects/</span>
+    <span class="links">
+      <a href="../">portfolio</a>
+      <a href="./" aria-current="page">projects</a>
+      <a href="https://www.linkedin.com/in/rahulk789/" target="_blank" rel="noopener">linkedin</a>
+      <a href="https://github.com/rahulk789" target="_blank" rel="noopener">github</a>
+    </span>
+  </nav>
+
+  <header class="hero">
+    <h1>Projects<span class="cursor" aria-hidden="true"></span></h1>
+    <p class="lede">
+      Side projects where I rebuild pieces of the Linux and cloud-native stack to see how they work:
+      a container runtime, a durable browser-session orchestrator, and eBPF programs that bend the kernel's
+      network path.
+    </p>
+  </header>
+
+  <section>
+    <div class="cards">
+      <a class="card" href="kettle/">
+        <h3>kettle/</h3>
+        <div class="meta">Go · OCI · runc · gRPC · ttrpc · overlayfs · May '25</div>
+        <p>A minimal container runtime engine designed to emulate a containerd-like architecture: create, run and delete containers, pull remote images and keep overlayfs snapshots.</p>
+      </a>
+      <a class="card" href="browser-orchestrator/">
+        <h3>browser-orchestrator/</h3>
+        <div class="meta">Rust · Restate · axum · Jan '26</div>
+        <p>A Rust-based microservice orchestration system aided by Restate for spawning multiple browser sessions exposed through a single axum server.</p>
+      </a>
+      <a class="card" href="ebpf-tools/">
+        <h3>ebpf_tools/</h3>
+        <div class="meta">C · Go · kprobes · sk_lookup · XDP · cgroup · Oct '22</div>
+        <p>hive is a CLI consisting of networking tools which can be used to trace/redirect network traffic.</p>
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <span>Find me on <a href="https://www.linkedin.com/in/rahulk789/" target="_blank" rel="noopener">LinkedIn</a></span>
+    <a href="../">cd ..</a>
+  </footer>
+</main>
+
+</body>
+</html>

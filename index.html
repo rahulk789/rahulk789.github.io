@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rahul K</title>
+  <meta name="description" content="Rahul K: Site Reliability Engineer working on container runtimes, checkpoint/restore, Kubernetes and Slurm infrastructure.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<main class="page">
+  <nav class="top">
+    <span class="prompt"><b>rahul@nixos</b>:~$ whoami</span>
+    <span class="links">
+      <a href="./" aria-current="page">portfolio</a>
+      <a href="projects/">projects</a>
+      <a href="https://www.linkedin.com/in/rahulk789/" target="_blank" rel="noopener">linkedin</a>
+      <a href="https://github.com/rahulk789" target="_blank" rel="noopener">github</a>
+    </span>
+  </nav>
+
+  <header class="hero">
+    <h1>Rahul K<span class="cursor" aria-hidden="true"></span></h1>
+    <p class="role">Site Reliability Engineer @ Cedana (YC S23)</p>
+    <p class="lede">
+      I specialize in  DevOps, platform, systems and HPC engineering,
+      I've helped companies scale to 10,000+ CPU and GPU workloads.
+      I love tinkering with low-level Kubernetes and designing platforms in Go and Rust.
+    </p>
+    <p class="lede">
+      On the side, I run nixos as my daily driver with neovim and qtile TWM.
+      I love playing bullet chess (rated around 2000). I read about handwriting analysis and philosophy when the time permits.
+    </p>
+  </header>
+
+  <section id="experience">
+    <h2>Experience</h2>
+
+    <div class="job">
+      <div class="when">Aug '24 – now<br>Remote</div>
+      <div>
+        <h3>Cedana</h3>
+        <p class="title">Site Reliability Engineer</p>
+        <ul>
+          <li>Built <a href="https://www.linkedin.com/posts/neelmaster1_15-min-pst-neel-master-share-7337941320054763523-38IM/" target="_blank" rel="noopener">Cedana-managed infrastructure</a> for Caltech through <a href="https://github.com/cedana/cedana-cli" target="_blank" rel="noopener">cedana-cli</a>, running 6,000+ CPU and 2,000+ GPU workloads on EKS.</li>
+          <li><a href="https://github.com/cedana/cedana/pull/709" target="_blank" rel="noopener">Redesigned plugin binary distribution in Rust</a> to go through S3 via an API, saving $12,000+ a year. The change needed linked refactors across 6+ repos. I added CRC32 checksum verification and fixed CI network regressions with S3 signed URLs.</li>
+          <li>Led the design of Slurm restore observability: a SPANK-spawned Go monitor tracks CRIU restores and reports profiling stages.</li>
+          <li>Led the migration of the legacy Go backend to Rust, and a full refactor of the Kiota-generated propagator SDK.</li>
+          <li>Owned the Rust policy engine that runs custom checkpoint/restore actions on Kubernetes and Slurm, with SQL-based throttling.</li>
+          <li>Designed cgo SPANK hooks and signal traps for preemption-driven Slurm checkpoint/restore, plus the Ansible installer.</li>
+          <li>Built a Kubernetes operator that streams <a href="https://github.com/cedana/cedana-helm-charts/pull/93" target="_blank" rel="noopener">Vector.dev metrics</a> to ClickHouse. Hive pathing cut payloads from 4 MB to 24 KB and RAM use from 80% to 20%.</li>
+          <li>Engineered an <a href="https://github.com/cedana/cedana/pull/658" target="_blank" rel="noopener">H100 end-to-end testing</a> framework for Kubernetes checkpoint/restore across OCI container runtimes.</li>
+          <li>Deployed EKS Karpenter through CloudFormation, with custom-AMI GPU node pools that scale to zero on weekends.</li>
+          <li>Ran ML/LLM workloads (vLLM, SGLang, OpenCode, PyTorch, co-folding) on Kubernetes with live CUDA checkpoint/restore.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="job">
+      <div class="when">Feb '24 – Aug '24<br>Bengaluru</div>
+      <div>
+        <h3>CloudSEK</h3>
+        <p class="title">DevOps Engineer</p>
+        <ul>
+          <li>On call for core product releases. Built the infrastructure for applications that scan 3,000,000 websites.</li>
+          <li>Maintained the ArgoCD GitOps workflow, Helm monorepo, KEDA and GitLab CI pipelines for prod and staging.</li>
+          <li>Set up Grafana, Zabbix, Lambda and SigNoz alerts to Slack, and PagerDuty call alerts for Uptime Kuma.</li>
+          <li>Implemented a Wazuh SIEM architecture for SOC 2 compliance. Migrated legacy EKS clusters to GKE with Velero.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="job">
+      <div class="when">Jul '23 – Feb '24<br>Bengaluru</div>
+      <div>
+        <h3>CloudSEK</h3>
+        <p class="title">DevOps Intern</p>
+        <ul>
+          <li>Set up a Kubernetes-based Qdrant installation for ML applications, and added Kubecost for cluster cost visibility.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="job">
+      <div class="when">Jun '23 – Jul '23<br>Remote</div>
+      <div>
+        <h3>Audio AI</h3>
+        <p class="title">DevOps Intern</p>
+        <ul>
+          <li>Built AWS infrastructure for MLOps, with Jenkins master-agent CD that ships models in Cog containers.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="job">
+      <div class="when">Mar '23 – Jun '23<br>Remote</div>
+      <div>
+        <h3>Muziriz Tech</h3>
+        <p class="title">Software Developer Intern</p>
+        <ul>
+          <li>Explored ways to trace HTTP/HTTPS with eBPF and worked on Aqua Security's Tracee, raising HTTPS coverage to 70%.</li>
+          <li>Measured and optimized the performance of Logstash and Filebeat.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <h2>Skills</h2>
+    <div class="skills">
+      <div class="row">
+        <span class="label">languages</span>
+        <span class="tags"><span class="tag">Rust</span><span class="tag">Go</span><span class="tag">C</span><span class="tag">C++</span><span class="tag">Python</span><span class="tag">Bash</span><span class="tag">SQL</span><span class="tag">TypeScript</span></span>
+      </div>
+      <div class="row">
+        <span class="label">systems</span>
+        <span class="tags"><span class="tag">Kubernetes</span><span class="tag">Docker</span><span class="tag">Slurm</span><span class="tag">containerd</span><span class="tag">gVisor</span><span class="tag">Slinky</span><span class="tag">slurm-bridge</span><span class="tag">Kueue</span><span class="tag">KEDA</span><span class="tag">CRIU</span><span class="tag">QEMU</span><span class="tag">Linux</span></span>
+      </div>
+      <div class="row">
+        <span class="label">infra</span>
+        <span class="tags"><span class="tag">AWS</span><span class="tag">GCP</span><span class="tag">Terraform</span><span class="tag">ArgoCD</span><span class="tag">Cilium</span><span class="tag">Prometheus</span><span class="tag">Grafana</span><span class="tag">OpenTelemetry</span></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <h2>Projects</h2>
+    <div class="cards">
+      <a class="card" href="projects/kettle/">
+        <h3>Kettle: container runtime engine</h3>
+        <div class="meta">Go · OCI · runc · gRPC · ttrpc · overlayfs · May '25</div>
+        <p>A minimal container runtime engine designed to emulate a containerd-like architecture: create, run and delete containers, pull remote images and keep overlayfs snapshots.</p>
+      </a>
+      <a class="card" href="projects/browser-orchestrator/">
+        <h3>Browser Orchestrator</h3>
+        <div class="meta">Rust · Restate · axum · Jan '26</div>
+        <p>A Rust-based microservice orchestration system aided by Restate for spawning multiple browser sessions exposed through a single axum server.</p>
+      </a>
+      <a class="card" href="projects/ebpf-tools/">
+        <h3>eBPF Tools (hive)</h3>
+        <div class="meta">C · Go · kprobes · sk_lookup · XDP · cgroup · Oct '22</div>
+        <p>hive is a CLI consisting of networking tools which can be used to trace/redirect network traffic.</p>
+      </a>
+      <a class="card" href="https://stingless.github.io" target="_blank" rel="noopener">
+        <h3>Stingless</h3>
+        <div class="meta">metrics · Vault · eBPF · Sep '23</div>
+        <p>A monitoring system with flamegraphs, queue alerts and more.</p>
+      </a>
+    </div>
+    <p class="muted" style="margin-top:16px">Each project has its own page under <a href="projects/">projects/</a>.</p>
+  </section>
+
+  <section id="community">
+    <h2>Honors &amp; community</h2>
+    <ul class="plain">
+      <li>Reviewed <a href="https://www.linkedin.com/posts/rahulk789_foss-pointblank-ugcPost-7510177163682250752-VcIz/" target="_blank" rel="noopener">30+ talk proposals</a> as a program reviewer for the FOSS India conference.<span class="when">Sep '26</span></li>
+      <li>Two-time <a href="https://www.linkedin.com/posts/rahulk789_had-the-opportunity-to-judge-at-sandbox-hackathon-activity-7437479681550921729-5fS-" target="_blank" rel="noopener">distinguished panel member</a> and judge at the AEGIS cybersecurity hackathon.<span class="when">Mar '25 &amp; Mar '26</span></li>
+      <li>Recognized for entrepreneurial excellence at Entrepreneur Conclave, DSCE.<span class="when">Dec '24</span></li>
+      <li>Technical lead at <a href="https://www.linkedin.com/company/pointblank-club/" target="_blank" rel="noopener">Pointblank Club</a>, guiding and teaching junior members.<span class="when">Sep '22 – now</span></li>
+      <li>Former team lead of the DSCE Chess Club. Organized online tournaments that reached 80+ students.<span class="when">Jul '23 – Jul '24</span></li>
+    </ul>
+  </section>
+
+  <section id="education">
+    <h2>Education</h2>
+    <div class="job">
+      <div class="when">2020 – 2024<br>Bengaluru</div>
+      <div>
+        <h3>Dayananda Sagar College of Engineering</h3>
+        <p class="title">B.Tech, Computer Science · CGPA 9.0</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Find me on <a href="https://www.linkedin.com/in/rahulk789/" target="_blank" rel="noopener">LinkedIn</a></span>
+    <a href="projects/">cd projects/</a>
+  </footer>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>eBPF Tools · Rahul K</title>
+  <meta name="description" content="hive: a CLI consisting of networking tools which can be used to trace/redirect network traffic using eBPF.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+
+<main class="page">
+  <nav class="top">
+    <span class="prompt"><b>rahul@nixos</b>:~$ cat projects/ebpf_tools</span>
+    <span class="links">
+      <a href="../../">portfolio</a>
+      <a href="../" aria-current="page">projects</a>
+      <a href="https://www.linkedin.com/in/rahulk789/" target="_blank" rel="noopener">linkedin</a>
+      <a href="https://github.com/rahulk789" target="_blank" rel="noopener">github</a>
+    </span>
+  </nav>
+
+  <article class="project">
+    <p class="crumbs"><a href="../">projects/</a>ebpf_tools/</p>
+    <p class="kicker">03 · ebpf_tools · hive cli</p>
+    <h3>eBPF Tools · <code>hive</code></h3>
+    <p class="meta">C · Go · kprobes · sk_lookup · sockmap · XDP · sk_skb · cgroup_skb · bpftool · Oct '22 ·
+      <a href="https://github.com/rahulk789/ebpf_tools" target="_blank" rel="noopener">source</a></p>
+
+    <p>
+      hive is a CLI consisting of networking tools which can be used to trace/redirect network traffic.
+      In its own words: <i>"We run a bunch of commands to trace or manipulate stuff using ebpf."</i>
+    </p>
+<pre class="diagram"><span class="c">$</span> git clone https://github.com/rahulk789/ebpf_tools
+<span class="c">$</span> make cli
+<span class="c">$</span> hive -h
+<span class="c">$</span> hive list              <span class="c"># list all available programs for execution</span>
+<span class="c">$</span> hive run -p &lt;program&gt;  <span class="c"># run any program type; -p selects the program</span></pre>
+
+    <h4>sklookup: divert traffic from port 4000 to port 5000</h4>
+    <p>An sk_lookup program using sockmap to divert traffic from port 4000 to port 5000 in a client-server model. Thought process:</p>
+    <ul>
+      <li>Create a kernel-space eBPF file with the src port fd in a sockmap and the dest port defined.</li>
+      <li>Make the sk_lookup program redirect from 4000 (src) to 5000 (dest).</li>
+      <li>Create a userspace file, get the sock fd of src and push it to the sockmap.</li>
+      <li>Pin the map. Link and load the eBPF prog to the kernel.</li>
+    </ul>
+<pre class="diagram">  client ──SYN──▶ :4000
+                    │
+          <span class="a">sk_lookup prog</span>  <span class="c">(runs before the kernel's normal socket lookup)</span>
+                    │   bpf_map_lookup_elem(&amp;redir_map, &amp;key)
+                    │   bpf_sk_assign(ctx, sk)
+                    ▼
+            <span class="b">server socket :5000</span>   <span class="c">(fd pushed into redir_map by sockmap-update)</span></pre>
+    <figure>
+      <a href="../../assets/img/ebpf-sklookup-redirect.png" target="_blank" rel="noopener"><img src="../../assets/img/ebpf-sklookup-redirect.png" width="1915" height="869" loading="lazy"
+           alt="Terminal panes: bpftool commands load and pin the redirect program and redir_map, sockmap-update inserts the listener's socket; nc connects to 127.0.0.1:4000 and the messages arrive at the nc listener on port 5000."></a>
+      <figcaption>The bpftool commands from <code>run.bat</code>; <code>nc 127.0.0.1 4000</code> lands on <code>nc -l -p 5000</code>. WE DID IT!!</figcaption>
+    </figure>
+
+    <h4>pass_4040: allow only one port for a given process</h4>
+    <p>
+      An eBPF program to allow traffic only at a specific TCP port (default 4040) for a given process name
+      ("myprocess"). All the traffic to all other ports for only that process is dropped.
+    </p>
+    <p>
+      <code>myprocess</code> tries to bind to two ports, namely <code>4040</code> and <code>8080</code>. The goal is
+      to allow the <code>4040</code> bind but prevent the <code>8080</code> bind. If another process opens and performs
+      the same operations, its <code>8080</code> bind attempt is not dropped and all its packets are allowed.
+      Under the hood, a kprobe on <code>security_socket_bind</code> catches the bind and an XDP program drops the packets.
+    </p>
+    <figure>
+      <a href="../../assets/img/ebpf-port-allowlist.png" target="_blank" rel="noopener"><img src="../../assets/img/ebpf-port-allowlist.png" width="363" height="861" loading="lazy"
+           alt="Terminal panes: myprocess sends a hello, clients c1 and c2 run, and the event pane reports pid 43208, comm myprocess, bind port 8080."></a>
+      <figcaption>Current event: pid 43208, comm <code>myprocess</code>, bind port 8080.</figcaption>
+    </figure>
+
+    <h4>tcp-connect</h4>
+    <p>Intercepts and reports the process which is trying to make a connect to a given port.</p>
+    <figure>
+      <a href="../../assets/img/ebpf-tcp-connect.png" target="_blank" rel="noopener"><img src="../../assets/img/ebpf-tcp-connect.png" width="405" height="232" loading="lazy"
+           alt="Terminal: a client prints hello; tcp_connect prints the pid, source port 4040, destination port and comm of the connecting process."></a>
+      <figcaption><code>./tcp_connect</code>: listening for events.</figcaption>
+    </figure>
+
+    <h4>pid-matcher</h4>
+    <p>You give a process ID as input, and it checks whether that process ID was opened by the <code>execve()</code> syscall, and prints yes if it was.</p>
+    <figure>
+      <a href="../../assets/img/ebpf-pid-matcher.jpg" target="_blank" rel="noopener"><img src="../../assets/img/ebpf-pid-matcher.jpg" width="580" height="519" loading="lazy"
+           alt="Terminal: pidmatcher -matchpid=26030 logs each new pid once per second and prints Yes when pid 26030 appears."></a>
+      <figcaption><code>./pidmatcher -matchpid=26030</code>: is pid matched? Yes!!!</figcaption>
+    </figure>
+
+    <h4>sk-skb-verdict</h4>
+    <p>
+      The skb verdict program parses all packets coming to the sockets added into <code>sock_map</code>. For each packet
+      it increases the counter in the <code>verdict_map</code> array. This illustrates socket-wise packet filtering based
+      on the socket pid and fd. The program is a modification of the kernel selftest program for the skb_verdict program type.
+    </p>
+    <figure>
+      <a href="../../assets/img/ebpf-sk-skb-verdict.jpg" target="_blank" rel="noopener"><img src="../../assets/img/ebpf-sk-skb-verdict.jpg" width="900" height="1062" loading="lazy"
+           alt="Terminal panes: an nc listener and client exchange messages on port 5000, bpftool dumps the pinned sock_map with two socket entries, and the verdict_map shows a count of 2 packets for key 0."></a>
+      <figcaption><code>bpftool map dump pinned ~/bpffs/sock_map</code> and <code>verdict_map</code>.</figcaption>
+    </figure>
+
+    <h4>cgroup-counter</h4>
+    <p>A <code>cgroup_skb/egress</code> program that counts egress packets in a <code>pkt_count</code> array map.</p>
+
+    <h4>Where it led</h4>
+    <p>
+      This work led into my internship on eBPF-based HTTP/HTTPS tracing with Aqua Security's Tracee, and later
+      into <a href="https://stingless.github.io" target="_blank" rel="noopener">Stingless</a>, a monitoring system with flamegraphs.
+    </p>
+  </article>
+
+  <nav class="pager">
+    <a href="../browser-orchestrator/">← browser-orchestrator/</a>
+    <a href="../">all projects →</a>
+  </nav>
+
+  <footer>
+    <span>Find me on <a href="https://www.linkedin.com/in/rahulk789/" target="_blank" rel="noopener">LinkedIn</a></span>
+    <a href="../">cd ..</a>
+  </footer>
+</main>
+
+</body>
+</html>

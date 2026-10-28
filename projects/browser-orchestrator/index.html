@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Browser Orchestrator · Rahul K</title>
+  <meta name="description" content="A Rust-based microservice orchestration system aided by Restate for spawning multiple browser sessions exposed through a single axum server.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+
+<main class="page">
+  <nav class="top">
+    <span class="prompt"><b>rahul@nixos</b>:~$ cat projects/browser-orchestrator</span>
+    <span class="links">
+      <a href="../../">portfolio</a>
+      <a href="../" aria-current="page">projects</a>
+      <a href="https://www.linkedin.com/in/rahulk789/" target="_blank" rel="noopener">linkedin</a>
+      <a href="https://github.com/rahulk789" target="_blank" rel="noopener">github</a>
+    </span>
+  </nav>
+
+  <article class="project">
+    <p class="crumbs"><a href="../">projects/</a>browser-orchestrator/</p>
+    <p class="kicker">02 · browser session orchestrator</p>
+    <h3>Browser Orchestrator</h3>
+    <p class="meta">Rust · Restate · axum · Go tester · Jan '26 ·
+      <a href="https://github.com/rahulk789/browser-orchestrator" target="_blank" rel="noopener">source</a></p>
+
+    <p>
+      A Rust-based microservice orchestration system aided by <a href="https://restate.dev" target="_blank" rel="noopener">Restate</a>
+      for spawning multiple browser sessions exposed through a single axum server. It uses Restate for durable,
+      stateful execution and axum as a thin HTTP compatibility layer, and it brings durable execution to fragile
+      browser sessions across 1,000+ concurrent sessions.
+    </p>
+
+    <figure>
+      <a href="../../assets/img/browser-orchestrator-demo.gif" target="_blank" rel="noopener"><img src="../../assets/img/browser-orchestrator-demo.gif" width="1789" height="1019" loading="lazy"
+           alt="Terminal recording of the Go tester creating, fetching and deleting browser sessions through the orchestrator's HTTP API on localhost:3000, each request returning 200 OK."></a>
+      <figcaption>Demo: the Go tester creating, getting and deleting sessions through <code>localhost:3000</code>.</figcaption>
+    </figure>
+
+    <h4>Summary</h4>
+<pre class="diagram">client ──HTTP──▶ <span class="a">axum</span> :3000 ──▶ <span class="a">Restate ingress</span> :8080 ──▶ <span class="b">Pool</span> (virtual object) :4000
+                 <span class="c">schema adapter</span>        <span class="c">durable, stateful execution</span>  │
+                                                                    ├─▶ steel-browser :port₁
+                                                                    ├─▶ steel-browser :port₂
+                                                                    └─▶ steel-browser :portₙ</pre>
+    <p>Restate is responsible for:</p>
+    <ul>
+      <li>Persisting the <b>worker/session pool state</b> across failures.</li>
+      <li>Performing <b>durable side effects</b> (starting and stopping <code>steel-browser</code> processes) via <code>ctx.run</code>.</li>
+      <li>Coordinating retries and recovery during worker startup and health checks.</li>
+    </ul>
+    <p>Each <code>steel-browser</code> instance runs exactly one browser session and exposes its own HTTP API. The orchestrator:</p>
+    <ul>
+      <li>Spawns workers on dynamically allocated ports.</li>
+      <li>Maintains a mapping between <b>sessions and workers</b>.</li>
+      <li>Routes session-scoped requests to the correct worker based on persisted state.</li>
+    </ul>
+    <p>
+      Axum serves only as a <b>schema adapter</b>, exposing endpoints compatible with the original
+      <code>steel-browser</code> API and forwarding requests to Restate. All orchestration logic and state management
+      live exclusively in Restate.
+    </p>
+    <p>
+      The primary design principle is <b>statefulness first</b>: session and worker state is always derived from
+      Restate-managed state, never from in-memory caches.
+    </p>
+
+    <h4>How the pool behaves</h4>
+    <ul>
+      <li><b>Workers are reused</b> across sessions. <code>spawn_worker</code> looks for an existing worker that is
+        <code>available</code>, and spawns a new <code>steel-browser</code> only when no worker is free.</li>
+      <li>The stale-session and stale-worker pollers <b>schedule themselves</b> as recurring loops through Restate
+        delayed self-calls (every 10s and 60s).</li>
+      <li>Health checks run <b>in parallel</b>: one <code>ctx.run</code> future per worker, awaited together with
+        <code>join_all</code>. Sessions on unhealthy workers are dropped too.</li>
+      <li>Session <b>TTL expiry</b> uses each session's <code>created_at</code>.</li>
+      <li>A missing session returns <b>404</b> instead of a 500.</li>
+    </ul>
+
+    <h4>Testing</h4>
+    <p>
+      The tester has been written in Go, encompassing TTL timeout checks, session/worker scaling, health/status checks,
+      and notable edge cases.
+    </p>
+
+    <h4>Trade-offs</h4>
+    <p>This project optimizes for <b>durability</b>, <b>explicit, persisted state</b>, and <b>correctness under retries and partial failures</b>.
+      It intentionally sacrifices simplicity of deployment, stateless request handling and HTTP-layer ergonomics.</p>
+    <p>
+      The focus was on Restate's execution and persistence model with orchestrating parallel reliable sessions, rather
+      than building a fully production-ready control plane.
+    </p>
+
+    <h4>Production gaps &amp; improvements</h4>
+    <ul>
+      <li><b>Process lifecycle management:</b> add explicit worker supervision (restart, timeout, cleanup on failure).</li>
+      <li><b>Resource exhaustion:</b> replace ad-hoc port scanning with a robust port allocation strategy, and add CPU,
+        memory and file-descriptor limits per worker.</li>
+      <li><b>Backpressure and admission control:</b> session creation is unbounded today, with no rate limiting or queuing during spikes.</li>
+      <li><b>Observability:</b> metrics for active sessions, worker startup latency, and retry counts and failure rates.</li>
+      <li>Typed state models instead of raw JSON blobs in Restate, structured responses instead of raw strings,
+        and formal idempotency guarantees for session creation and deletion.</li>
+    </ul>
+
+    <h4>Scaling</h4>
+    <p>
+      The current scaling model assumes <b>one orchestrator per region</b>, with each orchestrator managing workers local
+      to that region. In a Kubernetes-based deployment, workers would be scheduled as pods rather than OS processes, and
+      session routing would rely on Kubernetes networking instead of local ports. Longer-term, the worker abstraction
+      would be generalized so <code>steel-browser</code> is just one backend among others.
+    </p>
+  </article>
+
+  <nav class="pager">
+    <a href="../kettle/">← kettle/</a>
+    <a href="../ebpf-tools/">ebpf_tools/ →</a>
+  </nav>
+
+  <footer>
+    <span>Find me on <a href="https://www.linkedin.com/in/rahulk789/" target="_blank" rel="noopener">LinkedIn</a></span>
+    <a href="../">cd ..</a>
+  </footer>
+</main>
+
+</body>
+</html>

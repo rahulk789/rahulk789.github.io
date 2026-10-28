@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kettle · Rahul K</title>
+  <meta name="description" content="Kettle: a minimal container runtime engine designed to emulate a containerd-like architecture for performing fundamental container lifecycle operations.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/style.css">
+</head>
+<body>
+
+<main class="page">
+  <nav class="top">
+    <span class="prompt"><b>rahul@nixos</b>:~$ cat projects/kettle</span>
+    <span class="links">
+      <a href="../../">portfolio</a>
+      <a href="../" aria-current="page">projects</a>
+      <a href="https://www.linkedin.com/in/rahulk789/" target="_blank" rel="noopener">linkedin</a>
+      <a href="https://github.com/rahulk789" target="_blank" rel="noopener">github</a>
+    </span>
+  </nav>
+
+  <article class="project">
+    <p class="crumbs"><a href="../">projects/</a>kettle/</p>
+    <p class="kicker">01 · container runtime engine</p>
+    <h3>Kettle</h3>
+    <p class="meta">Go · OCI · runc · gRPC · ttrpc · overlayfs snapshots · May '25 ·
+      <a href="https://github.com/rahulk789/kettle" target="_blank" rel="noopener">source</a></p>
+
+    <p>
+      Kettle is a minimal container runtime engine designed to emulate a containerd-like architecture for
+      performing fundamental container lifecycle operations. At its current stage, the project does not introduce
+      custom runtime behavior. Its primary objective is to develop a deep, first-principles understanding of how
+      modern container runtimes are built and operate.
+    </p>
+    <p>
+      To that end, Kettle intentionally avoids using containerd's high-level abstractions or convenience APIs
+      (because where's the fun in that). Foundational components such as libcontainer, runc and other low-level
+      building blocks from the container ecosystem are leveraged where necessary, but the long-term goal is to
+      progressively reimplement and replace these dependencies to gain complete control and insight into the runtime stack.
+    </p>
+
+    <figure>
+      <a href="../../assets/img/kettle-architecture.png" target="_blank" rel="noopener"><img src="../../assets/img/kettle-architecture.png" width="1734" height="952" loading="lazy"
+           alt="Architecture diagram: KCTL calls the Kettle daemon's gRPC server, which creates container rootfs directories and talks to per-container Kettle shims over kettle.ttrpc.sock; each shim drives runc to start a runc container."></a>
+      <figcaption>KCTL → Kettle daemon (gRPC server) → kettle.ttrpc.sock → Kettle shim + unix sock → runc container.</figcaption>
+    </figure>
+
+    <h4>The three components</h4>
+    <p>The project mainly comprises three components, all available in <code>./cmd</code>:</p>
+    <ul>
+      <li><b>KCTL</b>: the client. You specify the runc bundle path along with a container ID.</li>
+      <li><b>Kettle</b>: the gRPC server, on <code>/run/kettle/kettle.sock</code>. It exposes a
+        <code>Containers</code> service (<code>Create</code>, <code>Start</code>).</li>
+      <li><b>Kettle-Shim</b>: launched for each container and responsible for owning the IO. It serves the
+        <code>Task</code> API over ttrpc.</li>
+    </ul>
+    <p>
+      KCTL talks to the Kettle gRPC server, which in turn creates a runc rootfs container along with its shim
+      process. To start this container we contact the shim server.
+    </p>
+<pre class="diagram"><span class="c">$</span> sudo ./cmd/kettle/kettle
+starting server
+gRPC server started on /run/kettle/kettle.sock
+
+<span class="c">$</span> sudo ./kctl create --bundle ~/projects/kettle/cmd/kctl/sample-container --id sample-container
+create called
+gRPC connected successfully</pre>
+    <p class="muted">You have now created a runc container through gRPC!</p>
+
+    <h4>Create and start, step by step</h4>
+    <figure>
+      <a href="../../assets/img/kettle-flow.png" target="_blank" rel="noopener"><img src="../../assets/img/kettle-flow.png" width="1587" height="919" loading="lazy"
+           alt="Flow diagram: kctl create calls grpc:Create, which builds the container rootfs and bundle without starting a shim; kctl start calls grpc:Start, which starts kettle-shim if it doesn't exist; the shim sets up ttrpc and ttrpc:Start runs runc start. Socket, bundle and rootfs paths live under /run/kettle/containers/<id>/."></a>
+      <figcaption>Container runtime engine: <code>grpc:Create</code>, then <code>grpc:Start</code>, then <code>ttrpc:Start</code>.</figcaption>
+    </figure>
+    <ul>
+      <li><code>kctl create --id hello-container</code> → <code>grpc:Create</code>: create container rootfs/bundle, without starting the shim.</li>
+      <li><code>kctl start --id hello-container</code> → <code>grpc:Start</code>: create the shim if it doesn't already exist.
+        This calls <code>runShim = kettle-shim start --id</code>.</li>
+      <li><code>kettle-shim start --id</code> calls <code>StartShim</code>, which sets up ttrpc.</li>
+      <li>The ttrpc function calls <code>startContainer = runc start</code>.</li>
+    </ul>
+<pre class="diagram"><span class="c">ttrpc sock =</span> /run/kettle/containers/hello-container/hello-container.ttrpc.sock
+<span class="c">grpc sock  =</span> /run/kettle/kettle.sock
+<span class="c">bundle     =</span> /run/kettle/containers/hello-container/config.json
+<span class="c">rootfs     =</span> /run/kettle/containers/hello-container/rootfs</pre>
+
+    <h4>Why a shim?</h4>
+    <p>
+      There are several ways to create a container. You can directly start a shim manually, which creates a
+      container using runc, or you can have a containerd-like service running which creates the shim. Kettle does the latter.
+    </p>
+    <p>
+      We basically create a shim process through the binary. This binary in turn spins up a ttrpc server which has
+      "task"-based proto funcs. We do <b>not</b> use ttrpc to create the shim; we use the ttrpc client only after
+      creating the shim. ttrpc servers exist only as part of shims, so Kettle also needs to know whether a shim
+      for a given container ID already exists, and only create one if it doesn't.
+    </p>
+
+    <h4>Images and snapshots</h4>
+    <p>
+      Kettle can pull remote images and unpack their layers into overlayfs snapshots, so containers share
+      read-only lower layers and each one gets its own writable upper layer.
+    </p>
+
+    <h4>Todo</h4>
+    <ul>
+      <li>Replace container name with uuidgen.</li>
+      <li>Make container process arguments configurable.</li>
+      <li>Implement delete container functionality.</li>
+      <li>Build container lifecycle management to handle restarts: detect crashloopbackoffs and try creating the
+        container again, record the logs, and help the user copy files to and from the runc container.</li>
+      <li>Eventually support Kubernetes.</li>
+    </ul>
+    <p>
+      Ultimately, this project aims to serve as a platform for experimentation. Once the core runtime architecture is
+      well understood, Kettle will be extended or modified, potentially in a manner similar to Kata Containers, to
+      support specialized, niche use cases with a particular focus on GPU-accelerated or AI/ML training workloads.
+    </p>
+  </article>
+
+  <nav class="pager">
+    <a href="../">← all projects</a>
+    <a href="../browser-orchestrator/">browser-orchestrator/ →</a>
+  </nav>
+
+  <footer>
+    <span>Find me on <a href="https://www.linkedin.com/in/rahulk789/" target="_blank" rel="noopener">LinkedIn</a></span>
+    <a href="../">cd ..</a>
+  </footer>
+</main>
+
+</body>
+</html>
