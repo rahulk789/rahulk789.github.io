@@ -281,3 +281,14 @@ footer {
   .job { grid-template-columns: 1fr; gap: 4px; }
   .skills .row { grid-template-columns: 1fr; gap: 6px; }
 }
+
+/* open source contributions */
+
+.oss .repo { padding: 20px 0; border-top: 1px solid var(--rule); }
+.oss .repo:first-of-type { border-top: 0; }
+.oss .repo h3 { margin-bottom: 12px; }
+.oss .repo h3 a { color: var(--fg); text-decoration: none; }
+.oss .repo h3 a:hover { color: var(--red); }
+.oss .count { font-size: 12.5px; font-weight: 500; color: var(--dim); margin-left: 6px; }
+.oss ul.plain li { padding: 6px 0; font-size: 14px; }
+.oss ul.plain li a { margin-right: 6px; }
